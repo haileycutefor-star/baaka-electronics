@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAAKA Electronics — Wires, Batteries, Solar & Appliances</title>
+<style>
+  @font-face {
+    font-family: 'system-display';
+    src: local('Arial');
+  }
+
+  :root {
+    --ink: #0B1F1A;
+    --circuit-blue: #12335C;
+    --circuit-blue-bright: #1E4E8C;
+    --live-green: #2F9E5B;
+    --live-green-bright: #3FC172;
+    --paper: #F3F6F4;
+    --paper-dim: #E4EAE6;
+    --wire-copper: #C97A3D;
+    --line: rgba(11,31,26,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(243,246,244,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--live-green-bright);
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(63,193,114,0.6);
+    animation: pulse-ring 2.2s ease-out infinite;
+  }
+
+  @keyframes pulse-ring {
+    0%   { box-shadow: 0 0 0 0 rgba(63,193,114,0.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(63,193,114,0); }
+    100% { box-shadow: 0 0 0 0 rgba(63,193,114,0); }
+  }
+
+  nav {
+    display: flex;
+    gap: 28px;
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  nav a {
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.15s ease;
+  }
+  nav a:hover, nav a:focus-visible { opacity: 1; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--live-green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 11px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .btn:hover { background: var(--live-green-bright); transform: translateY(-1px); }
+  .btn:focus-visible, a:focus-visible, button:focus-visible {
+    outline: 3px solid var(--circuit-blue-bright);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 72px 0 56px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  .circuit-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--live-green);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-size: clamp(2.3rem, 4.4vw, 3.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: var(--circuit-blue);
+  }
+
+  h1 span.underline {
+    position: relative;
+    white-space: nowrap;
+  }
+  h1 span.underline::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0.06em;
+    height: 0.16em;
+    background: var(--live-green-bright);
+    z-index: -1;
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: draw-underline 1s ease 0.4s forwards;
+  }
+  @keyframes draw-underline { to { transform: scaleX(1); } }
+
+  .hero p.lede {
+    margin-top: 20px;
+    font-size: 1.08rem;
+    max-width: 46ch;
+    color: rgba(11,31,26,0.75);
+  }
+
+  .hero-ctas {
+    margin-top: 32px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 11px 4px;
+    text-decoration: none;
+    color: var(--circuit-blue);
+    border-bottom: 2px solid var(--circuit-blue);
+  }
+
+  /* --- Signature element: the "load panel" schematic card --- */
+  .panel {
+    position: relative;
+    background: var(--circuit-blue);
+    border-radius: 18px;
+    padding: 28px;
+    color: #fff;
+    box-shadow: 0 30px 60px -25px rgba(18,51,92,0.55);
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 18px;
+  }
+
+  .panel-head .live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--live-green-bright);
+    opacity: 1;
+  }
+
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .rail-row {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    font-size: 0.92rem;
+  }
+  .rail-row:first-child { border-top: none; }
+
+  .node {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--live-green-bright);
+    justify-self: center;
+    box-shadow: 0 0 0 3px rgba(63,193,114,0.18);
+  }
+
+  .rail-label { font-weight: 600; }
+  .rail-value { font-variant-numeric: tabular-nums; opacity: 0.75; font-size: 0.85rem; }
+
+  .panel-foot {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(255,255,255,0.2);
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  /* ---------- Categories ---------- */
+  .section {
+    padding: 64px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    letter-spacing: -0.02em;
+    color: var(--circuit-blue);
+    font-weight: 800;
+  }
+
+  .section-head p {
+    color: rgba(11,31,26,0.6);
+    font-size: 0.95rem;
+    max-width: 34ch;
+  }
+
+  .grid-cats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .cat-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .cat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 30px -18px rgba(18,51,92,0.35);
+    border-color: rgba(47,158,91,0.4);
+  }
+
+  .cat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--paper-dim);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .cat-card h3 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .cat-card p {
+    font-size: 0.86rem;
+    color: rgba(11,31,26,0.6);
+  }
+
+  /* ---------- How it works ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  .step {
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: -0px;
+    width: calc(100% - 40px);
+    height: 2px;
+    background: repeating-linear-gradient(to right, var(--live-green) 0 6px, transparent 6px 12px);
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--circuit-blue);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step h3 { font-size: 1.05rem; margin-bottom: 8px; color: var(--ink); }
+  .step p { font-size: 0.9rem; color: rgba(11,31,26,0.6); }
+
+  /* ---------- Contact / CTA ---------- */
+  .cta-band {
+    background: var(--circuit-blue);
+    border-radius: 22px;
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    color: #fff;
+    flex-wrap: wrap;
+  }
+
+  .cta-band h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    max-width: 20ch;
+  }
+
+  .cta-band p {
+    margin-top: 10px;
+    opacity: 0.75;
+    max-width: 40ch;
+    font-size: 0.95rem;
+  }
+
+  .cta-band .btn {
+    background: var(--live-green-bright);
+    font-size: 0.98rem;
+    padding: 14px 26px;
+  }
+  .cta-band .btn:hover { background: var(--live-green); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 40px 0 50px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    color: rgba(11,31,26,0.55);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer .foot-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: var(--circuit-blue);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .grid-cats { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: 1fr; gap: 28px; }
+    .step:not(:last-child)::after { display: none; }
+    nav { display: none; }
+    .cta-band { flex-direction: column; text-align: center; align-items: center; }
+  }
+
+  @media (max-width: 480px) {
+    .grid-cats { grid-template-columns: 1fr; }
+    .wrap { padding: 0 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/>
+        <path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/>
+      </svg>
+      BAAKA <span style="color:var(--live-green); margin-left:2px;">Electronics</span>
+    </div>
+    <nav>
+      <a href="#categories">Categories</a>
+      <a href="#how">How it works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="btn" href="#contact">
+      <span class="pulse-dot"></span> Chat on WhatsApp
+    </a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow"><span class="pulse-dot"></span> Open now &middot; Kampala, Uganda</div>
+      <h1>Power, parts &amp;<br><span class="underline">appliances</span> that<br>just work.</h1>
+      <p class="lede">Wires, batteries, solar kits, and home electronics — priced fairly in UGX, in stock, and ready when you are.</p>
+      <div class="hero-ctas">
+        <a class="btn" href="#contact">
+          <span class="pulse-dot"></span> Chat on WhatsApp
+        </a>
+        <a class="btn-ghost" href="#categories">Browse categories &rarr;</a>
+      </div>
+    </div>
+
+    <div class="panel" role="img" aria-label="Illustration of a shop status panel showing product categories in stock">
+      <div class="panel-head">
+        <span>SHOP STATUS</span>
+        <span class="live"><span class="pulse-dot"></span> LIVE</span>
+      </div>
+      <div class="rail">
+        <div class="rail-row">
+          <span class="node"></span>
+          <span class="rail-label">Solar &amp; power kits</span>
+          <span class="rail-value">In stock</span>
+        </div>
+        <div class="rail-row">
+          <span class="node"></span>
+          <span class="rail-label">Batteries</span>
+          <span class="rail-value">In stock</span>
+        </div>
+        <div class="rail-row">
+          <span class="node"></span>
+          <span class="rail-label">Wires &amp; cables</span>
+          <span class="rail-value">In stock</span>
+        </div>
+        <div class="rail-row">
+          <span class="node"></span>
+          <span class="rail-label">Home appliances</span>
+          <span class="rail-value">In stock</span>
+        </div>
+      </div>
+      <div class="panel-foot">Prices in UGX &middot; New stock added weekly</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="categories">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>What we stock</h2>
+        <p>The everyday essentials, always in stock.</p>
+      </div>
+    </div>
+    <div class="grid-cats">
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-6 4 12 2-6h6" stroke="#12335C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Wires &amp; Cables</h3>
+        <p>Electrical wiring, extension cables, and connectors for home and shop use.</p>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="7" y="3" width="10" height="18" rx="2" stroke="#12335C" stroke-width="2"/><rect x="9" y="1" width="6" height="3" rx="1" fill="#12335C"/></svg>
+        </div>
+        <h3>Batteries</h3>
+        <p>Dry cells, rechargeables, and backup batteries for every device.</p>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 14h6l-2 8 10-14h-6l2-6z" stroke="#2F9E5B" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Solar Kits</h3>
+        <p>Panels, inverters, and complete solar starter kits for off-grid power.</p>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="12" rx="2" stroke="#12335C" stroke-width="2"/><path d="M8 20h8M12 16v4" stroke="#12335C" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Home Appliances</h3>
+        <p>Everyday electronics and appliances for the home, at fair prices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <h2>How to order</h2>
+        <p>No app to download — just message us.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Message us on WhatsApp</h3>
+        <p>Tell us what you're looking for, or ask what's currently in stock.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We confirm price &amp; availability</h3>
+        <p>You'll get a straight answer in UGX, no back and forth.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Collect or arrange delivery</h3>
+        <p>Pick up in-shop or arrange delivery — your choice.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>Need something today?</h2>
+        <p>Message BAAKA Electronics on WhatsApp and we'll get back to you right away.</p>
+      </div>
+      <a class="btn" href="https://wa.me/256000000000" target="_blank" rel="noopener">
+        <span class="pulse-dot"></span> Message us on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+    <div class="foot-brand">
+      <svg width="20" height="20" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/>
+        <path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/>
+      </svg>
+      BAAKA Electronics
+    </div>
+    <span>&copy; 2026 BAAKA Electronics &middot; Kampala, Uganda</span>
+  </div>
+</footer>
+
+</body>
+</html>
