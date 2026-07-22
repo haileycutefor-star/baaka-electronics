@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BAAKA Electronics — Wires, Batteries, Solar & Appliances</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BAAKA Electronics</title>
+<meta name="theme-color" content="#12335C">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
-  @font-face {
-    font-family: 'system-display';
-    src: local('Arial');
-  }
-
   :root {
     --ink: #0B1F1A;
     --circuit-blue: #12335C;
@@ -18,443 +17,193 @@
     --live-green-bright: #3FC172;
     --paper: #F3F6F4;
     --paper-dim: #E4EAE6;
-    --wire-copper: #C97A3D;
     --line: rgba(11,31,26,0.12);
+    --danger: #C24B3F;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
   body {
     background: var(--paper);
     color: var(--ink);
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
+    padding-bottom: 90px;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  }
-
   a { color: inherit; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 18px; }
 
-  .wrap {
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 28px;
-  }
-
-  /* ---------- Header ---------- */
   header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(243,246,244,0.92);
+    position: sticky; top: 0; z-index: 40;
+    background: rgba(243,246,244,0.95);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--line);
   }
-
   .header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 0;
   }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    font-size: 1.25rem;
-    letter-spacing: -0.02em;
-  }
-
-  .brand-mark {
-    width: 30px;
-    height: 30px;
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.1rem; }
+  .brand svg { flex-shrink: 0; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .icon-btn {
     position: relative;
-    flex-shrink: 0;
-  }
-
-  .pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--live-green-bright);
-    display: inline-block;
-    box-shadow: 0 0 0 0 rgba(63,193,114,0.6);
-    animation: pulse-ring 2.2s ease-out infinite;
-  }
-
-  @keyframes pulse-ring {
-    0%   { box-shadow: 0 0 0 0 rgba(63,193,114,0.55); }
-    70%  { box-shadow: 0 0 0 8px rgba(63,193,114,0); }
-    100% { box-shadow: 0 0 0 0 rgba(63,193,114,0); }
-  }
-
-  nav {
-    display: flex;
-    gap: 28px;
-    font-size: 0.92rem;
-    font-weight: 600;
-  }
-
-  nav a {
-    text-decoration: none;
-    opacity: 0.75;
-    transition: opacity 0.15s ease;
-  }
-  nav a:hover, nav a:focus-visible { opacity: 1; }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--live-green);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.9rem;
-    padding: 11px 20px;
-    border-radius: 999px;
-    text-decoration: none;
-    border: none;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transition: background 0.15s ease, transform 0.15s ease;
   }
-  .btn:hover { background: var(--live-green-bright); transform: translateY(-1px); }
-  .btn:focus-visible, a:focus-visible, button:focus-visible {
-    outline: 3px solid var(--circuit-blue-bright);
-    outline-offset: 2px;
-  }
-
-  /* ---------- Hero ---------- */
-  .hero {
-    position: relative;
-    padding: 72px 0 56px;
-    overflow: hidden;
-    background: var(--paper);
+  .badge {
+    position: absolute; top: -6px; right: -6px;
+    background: var(--live-green); color: #fff;
+    font-size: 0.65rem; font-weight: 800;
+    min-width: 18px; height: 18px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px;
   }
 
-  .circuit-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.5;
+  .install-banner {
+    display: none;
+    background: var(--circuit-blue); color: #fff;
+    padding: 10px 18px; font-size: 0.85rem;
+    align-items: center; justify-content: space-between; gap: 12px;
   }
-
-  .hero-inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 48px;
-    align-items: center;
+  .install-banner.show { display: flex; }
+  .install-banner button {
+    background: var(--live-green-bright); color: #fff; border: none;
+    border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: 0.8rem;
+    cursor: pointer;
   }
+  .install-banner .dismiss { background: transparent; color: rgba(255,255,255,0.7); padding: 7px 4px; }
 
-  .eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--live-green);
-    margin-bottom: 18px;
+  .chips {
+    display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 4px;
+    scrollbar-width: none;
   }
-
-  h1 {
-    font-size: clamp(2.3rem, 4.4vw, 3.6rem);
-    line-height: 1.04;
-    letter-spacing: -0.03em;
-    font-weight: 800;
-    color: var(--circuit-blue);
-  }
-
-  h1 span.underline {
-    position: relative;
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    padding: 8px 16px; border-radius: 999px;
+    background: #fff; border: 1px solid var(--line);
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
     white-space: nowrap;
   }
-  h1 span.underline::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; bottom: 0.06em;
-    height: 0.16em;
-    background: var(--live-green-bright);
-    z-index: -1;
-    opacity: 0.35;
-    transform: scaleX(0);
-    transform-origin: left;
-    animation: draw-underline 1s ease 0.4s forwards;
-  }
-  @keyframes draw-underline { to { transform: scaleX(1); } }
+  .chip.active { background: var(--circuit-blue); color: #fff; border-color: var(--circuit-blue); }
 
-  .hero p.lede {
-    margin-top: 20px;
-    font-size: 1.08rem;
-    max-width: 46ch;
-    color: rgba(11,31,26,0.75);
+  .status-line {
+    font-size: 0.85rem; color: rgba(11,31,26,0.55);
+    padding: 8px 0 4px;
   }
 
-  .hero-ctas {
-    margin-top: 32px;
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    flex-wrap: wrap;
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; padding: 14px 0 30px;
   }
-
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    padding: 11px 4px;
-    text-decoration: none;
-    color: var(--circuit-blue);
-    border-bottom: 2px solid var(--circuit-blue);
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px; display: flex; flex-direction: column; gap: 8px;
   }
-
-  /* --- Signature element: the "load panel" schematic card --- */
-  .panel {
-    position: relative;
-    background: var(--circuit-blue);
-    border-radius: 18px;
-    padding: 28px;
-    color: #fff;
-    box-shadow: 0 30px 60px -25px rgba(18,51,92,0.55);
-  }
-
-  .panel-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.74rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 18px;
-  }
-
-  .panel-head .live {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--live-green-bright);
-    opacity: 1;
-  }
-
-  .rail {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .rail-row {
-    display: grid;
-    grid-template-columns: 22px 1fr auto;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 0;
-    border-top: 1px solid rgba(255,255,255,0.14);
-    font-size: 0.92rem;
-  }
-  .rail-row:first-child { border-top: none; }
-
-  .node {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: var(--live-green-bright);
-    justify-self: center;
-    box-shadow: 0 0 0 3px rgba(63,193,114,0.18);
-  }
-
-  .rail-label { font-weight: 600; }
-  .rail-value { font-variant-numeric: tabular-nums; opacity: 0.75; font-size: 0.85rem; }
-
-  .panel-foot {
-    margin-top: 18px;
-    padding-top: 16px;
-    border-top: 1px dashed rgba(255,255,255,0.2);
-    font-size: 0.8rem;
-    opacity: 0.7;
-  }
-
-  /* ---------- Categories ---------- */
-  .section {
-    padding: 64px 0;
-    border-top: 1px solid var(--line);
-  }
-
-  .section-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 24px;
-    margin-bottom: 36px;
-  }
-
-  .section-head h2 {
-    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
-    letter-spacing: -0.02em;
-    color: var(--circuit-blue);
-    font-weight: 800;
-  }
-
-  .section-head p {
-    color: rgba(11,31,26,0.6);
-    font-size: 0.95rem;
-    max-width: 34ch;
-  }
-
-  .grid-cats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-  }
-
-  .cat-card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 22px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  }
-  .cat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 16px 30px -18px rgba(18,51,92,0.35);
-    border-color: rgba(47,158,91,0.4);
-  }
-
-  .cat-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
     background: var(--paper-dim);
     display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
+  }
+  .card h3 { font-size: 0.95rem; font-weight: 700; }
+  .card .cat { font-size: 0.72rem; color: var(--live-green); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card .price { font-size: 1rem; font-weight: 800; color: var(--circuit-blue); }
+  .card .desc { font-size: 0.78rem; color: rgba(11,31,26,0.55); flex-grow: 1; }
+  .stock-out { font-size: 0.72rem; color: var(--danger); font-weight: 700; }
+
+  .qty-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .stepper { display: flex; align-items: center; gap: 8px; }
+  .stepper button {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--paper);
+    font-weight: 800; font-size: 1rem; cursor: pointer;
+  }
+  .stepper span { font-weight: 700; min-width: 16px; text-align: center; }
+  .add-btn {
+    width: 100%; padding: 9px; border-radius: 10px; border: none;
+    background: var(--live-green); color: #fff; font-weight: 700; font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .add-btn:disabled { background: var(--paper-dim); color: rgba(11,31,26,0.4); cursor: not-allowed; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: rgba(11,31,26,0.5);
   }
 
-  .cat-card h3 {
-    font-size: 1.02rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 6px;
+  /* Floating cart bar */
+  .cart-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    background: var(--circuit-blue); color: #fff;
+    padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+    display: none; align-items: center; justify-content: space-between;
+    box-shadow: 0 -10px 30px -15px rgba(0,0,0,0.4);
   }
-  .cat-card p {
-    font-size: 0.86rem;
-    color: rgba(11,31,26,0.6);
-  }
-
-  /* ---------- How it works ---------- */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    position: relative;
+  .cart-bar.show { display: flex; }
+  .cart-bar .total { font-size: 0.85rem; }
+  .cart-bar .total strong { font-size: 1.05rem; display: block; }
+  .cart-bar button {
+    background: var(--live-green-bright); color: #fff; border: none;
+    border-radius: 999px; padding: 12px 22px; font-weight: 800; font-size: 0.9rem;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
   }
 
-  .step {
-    padding: 0 20px;
-    position: relative;
+  /* Drawer (shopping list + account) */
+  .drawer-overlay {
+    position: fixed; inset: 0; background: rgba(11,31,26,0.45);
+    z-index: 60; display: none;
   }
-
-  .step:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 20px;
-    right: -0px;
-    width: calc(100% - 40px);
-    height: 2px;
-    background: repeating-linear-gradient(to right, var(--live-green) 0 6px, transparent 6px 12px);
+  .drawer-overlay.show { display: block; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 61;
+    width: min(400px, 88vw);
+    background: #fff; transform: translateX(100%);
+    transition: transform 0.25s ease;
+    display: flex; flex-direction: column;
   }
-
-  .step-num {
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: var(--circuit-blue);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 800;
-    font-size: 0.95rem;
-    margin-bottom: 18px;
-    position: relative;
-    z-index: 1;
+  .drawer.show { transform: translateX(0); }
+  .drawer-head {
+    padding: 20px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
   }
-
-  .step h3 { font-size: 1.05rem; margin-bottom: 8px; color: var(--ink); }
-  .step p { font-size: 0.9rem; color: rgba(11,31,26,0.6); }
-
-  /* ---------- Contact / CTA ---------- */
-  .cta-band {
-    background: var(--circuit-blue);
-    border-radius: 22px;
-    padding: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    color: #fff;
-    flex-wrap: wrap;
+  .drawer-head h2 { font-size: 1.1rem; font-weight: 800; }
+  .drawer-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--ink); }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 16px 20px; }
+  .list-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .list-item .info { flex: 1; }
+  .list-item .info h4 { font-size: 0.9rem; font-weight: 700; }
+  .list-item .info .p { font-size: 0.8rem; color: rgba(11,31,26,0.55); }
+  .list-item .remove { background: none; border: none; color: var(--danger); font-size: 0.78rem; cursor: pointer; font-weight: 700; }
+  .drawer-foot { padding: 18px 20px; border-top: 1px solid var(--line); }
+  .drawer-foot .total-row { display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 12px; }
+  .shop-btn {
+    width: 100%; padding: 13px; border-radius: 10px; border: none;
+    background: var(--live-green); color: #fff; font-weight: 800; font-size: 0.95rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
   }
+  .shop-btn:disabled { background: var(--paper-dim); color: rgba(11,31,26,0.4); }
 
-  .cta-band h2 {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-    letter-spacing: -0.02em;
-    max-width: 20ch;
+  /* Account form */
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; }
+  .field input {
+    width: 100%; padding: 11px 12px; border-radius: 10px;
+    border: 1px solid var(--line); font-size: 0.95rem;
   }
-
-  .cta-band p {
-    margin-top: 10px;
-    opacity: 0.75;
-    max-width: 40ch;
-    font-size: 0.95rem;
+  .primary-btn {
+    width: 100%; padding: 12px; border-radius: 10px; border: none;
+    background: var(--circuit-blue); color: #fff; font-weight: 700; font-size: 0.9rem;
+    cursor: pointer; margin-top: 4px;
   }
+  .muted { font-size: 0.8rem; color: rgba(11,31,26,0.55); }
+  .account-signed-in { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--paper); border-radius: 12px; }
+  .account-signed-in .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--live-green-bright); }
+  #recaptcha-container { margin: 8px 0; }
 
-  .cta-band .btn {
-    background: var(--live-green-bright);
-    font-size: 0.98rem;
-    padding: 14px 26px;
-  }
-  .cta-band .btn:hover { background: var(--live-green); }
-
-  /* ---------- Footer ---------- */
-  footer {
-    padding: 40px 0 50px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.82rem;
-    color: rgba(11,31,26,0.55);
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  footer .foot-brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 700;
-    color: var(--circuit-blue);
-  }
-
-  /* ---------- Responsive ---------- */
-  @media (max-width: 860px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .grid-cats { grid-template-columns: repeat(2, 1fr); }
-    .steps { grid-template-columns: 1fr; gap: 28px; }
-    .step:not(:last-child)::after { display: none; }
-    nav { display: none; }
-    .cta-band { flex-direction: column; text-align: center; align-items: center; }
-  }
-
-  @media (max-width: 480px) {
-    .grid-cats { grid-template-columns: 1fr; }
-    .wrap { padding: 0 18px; }
+  @media (min-width: 640px) {
+    .grid { grid-template-columns: 1fr 1fr 1fr; }
   }
 </style>
 </head>
@@ -463,164 +212,354 @@
 <header>
   <div class="wrap header-inner">
     <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/>
         <path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/>
       </svg>
-      BAAKA <span style="color:var(--live-green); margin-left:2px;">Electronics</span>
+      BAAKA <span style="color:var(--live-green)">Electronics</span>
     </div>
-    <nav>
-      <a href="#categories">Categories</a>
-      <a href="#how">How it works</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="btn" href="#contact">
-      <span class="pulse-dot"></span> Chat on WhatsApp
-    </a>
+    <div class="header-actions">
+      <button class="icon-btn" id="accountBtn" title="Account" aria-label="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#12335C" stroke-width="2"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="#12335C" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" title="Shopping list" aria-label="Shopping list">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2 12h11l2-8H6" stroke="#12335C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="20" r="1.4" fill="#12335C"/><circle cx="17" cy="20" r="1.4" fill="#12335C"/></svg>
+        <span class="badge" id="cartBadge" style="display:none">0</span>
+      </button>
+    </div>
+  </div>
+  <div class="install-banner" id="installBanner">
+    <span>Install BAAKA Electronics for quicker access</span>
+    <div style="display:flex; gap:6px;">
+      <button id="installBtn">Install</button>
+      <button class="dismiss" id="dismissInstall">✕</button>
+    </div>
   </div>
 </header>
 
-<section class="hero">
-  <div class="wrap hero-inner">
-    <div>
-      <div class="eyebrow"><span class="pulse-dot"></span> Open now &middot; Kampala, Uganda</div>
-      <h1>Power, parts &amp;<br><span class="underline">appliances</span> that<br>just work.</h1>
-      <p class="lede">Wires, batteries, solar kits, and home electronics — priced fairly in UGX, in stock, and ready when you are.</p>
-      <div class="hero-ctas">
-        <a class="btn" href="#contact">
-          <span class="pulse-dot"></span> Chat on WhatsApp
-        </a>
-        <a class="btn-ghost" href="#categories">Browse categories &rarr;</a>
-      </div>
-    </div>
-
-    <div class="panel" role="img" aria-label="Illustration of a shop status panel showing product categories in stock">
-      <div class="panel-head">
-        <span>SHOP STATUS</span>
-        <span class="live"><span class="pulse-dot"></span> LIVE</span>
-      </div>
-      <div class="rail">
-        <div class="rail-row">
-          <span class="node"></span>
-          <span class="rail-label">Solar &amp; power kits</span>
-          <span class="rail-value">In stock</span>
-        </div>
-        <div class="rail-row">
-          <span class="node"></span>
-          <span class="rail-label">Batteries</span>
-          <span class="rail-value">In stock</span>
-        </div>
-        <div class="rail-row">
-          <span class="node"></span>
-          <span class="rail-label">Wires &amp; cables</span>
-          <span class="rail-value">In stock</span>
-        </div>
-        <div class="rail-row">
-          <span class="node"></span>
-          <span class="rail-label">Home appliances</span>
-          <span class="rail-value">In stock</span>
-        </div>
-      </div>
-      <div class="panel-foot">Prices in UGX &middot; New stock added weekly</div>
-    </div>
+<div class="wrap">
+  <div class="chips" id="chips">
+    <div class="chip active" data-cat="all">All</div>
   </div>
-</section>
+  <div class="status-line" id="statusLine">Loading products…</div>
+  <div class="grid" id="grid"></div>
+</div>
 
-<section class="section" id="categories">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <h2>What we stock</h2>
-        <p>The everyday essentials, always in stock.</p>
-      </div>
-    </div>
-    <div class="grid-cats">
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-6 4 12 2-6h6" stroke="#12335C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Wires &amp; Cables</h3>
-        <p>Electrical wiring, extension cables, and connectors for home and shop use.</p>
-      </div>
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="7" y="3" width="10" height="18" rx="2" stroke="#12335C" stroke-width="2"/><rect x="9" y="1" width="6" height="3" rx="1" fill="#12335C"/></svg>
-        </div>
-        <h3>Batteries</h3>
-        <p>Dry cells, rechargeables, and backup batteries for every device.</p>
-      </div>
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 14h6l-2 8 10-14h-6l2-6z" stroke="#2F9E5B" stroke-width="2" stroke-linejoin="round"/></svg>
-        </div>
-        <h3>Solar Kits</h3>
-        <p>Panels, inverters, and complete solar starter kits for off-grid power.</p>
-      </div>
-      <div class="cat-card">
-        <div class="cat-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="12" rx="2" stroke="#12335C" stroke-width="2"/><path d="M8 20h8M12 16v4" stroke="#12335C" stroke-width="2" stroke-linecap="round"/></svg>
-        </div>
-        <h3>Home Appliances</h3>
-        <p>Everyday electronics and appliances for the home, at fair prices.</p>
-      </div>
-    </div>
+<!-- Floating cart bar -->
+<div class="cart-bar" id="cartBar">
+  <div class="total">
+    <span id="cartCountLabel">0 items</span>
+    <strong id="cartTotalLabel">UGX 0</strong>
   </div>
-</section>
+  <button id="openCartBtn">View list &rarr;</button>
+</div>
 
-<section class="section" id="how">
-  <div class="wrap">
-    <div class="section-head">
-      <div>
-        <h2>How to order</h2>
-        <p>No app to download — just message us.</p>
-      </div>
-    </div>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">1</div>
-        <h3>Message us on WhatsApp</h3>
-        <p>Tell us what you're looking for, or ask what's currently in stock.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <h3>We confirm price &amp; availability</h3>
-        <p>You'll get a straight answer in UGX, no back and forth.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <h3>Collect or arrange delivery</h3>
-        <p>Pick up in-shop or arrange delivery — your choice.</p>
-      </div>
-    </div>
+<!-- Shopping list drawer -->
+<div class="drawer-overlay" id="cartOverlay"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h2>Your shopping list</h2>
+    <button class="drawer-close" id="closeCart">&times;</button>
   </div>
-</section>
+  <div class="drawer-body" id="cartItems">
+    <div class="empty-state">Your list is empty.<br>Add products to get started.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>Total</span><span id="drawerTotal">UGX 0</span></div>
+    <button class="shop-btn" id="shopBtn" disabled>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 00-7.8 13.5L3 21l4.6-1.2A9 9 0 1012 3z" fill="#fff"/></svg>
+      Shop on WhatsApp
+    </button>
+    <p class="muted" style="margin-top:8px; text-align:center;">Sends your list straight to BAAKA Electronics on WhatsApp.</p>
+  </div>
+</div>
 
-<section class="section" id="contact">
-  <div class="wrap">
-    <div class="cta-band">
-      <div>
-        <h2>Need something today?</h2>
-        <p>Message BAAKA Electronics on WhatsApp and we'll get back to you right away.</p>
+<!-- Account drawer -->
+<div class="drawer-overlay" id="accountOverlay"></div>
+<div class="drawer" id="accountDrawer">
+  <div class="drawer-head">
+    <h2>Your account</h2>
+    <button class="drawer-close" id="closeAccount">&times;</button>
+  </div>
+  <div class="drawer-body" id="accountBody">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<div id="recaptcha-container"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+const WHATSAPP_NUMBER = "256763881305"; // BAAKA Electronics registered WhatsApp number
+
+let products = [];
+let activeCategory = "all";
+let cart = JSON.parse(localStorage.getItem("baaka_cart") || "[]");
+let currentUser = null;
+
+// ---------- Products (real-time from Firestore) ----------
+db.collection("products").orderBy("category").onSnapshot((snap) => {
+  products = [];
+  snap.forEach((doc) => products.push({ id: doc.id, ...doc.data() }));
+  renderCategories();
+  renderGrid();
+  document.getElementById("statusLine").textContent =
+    products.length ? `${products.length} products available` : "";
+}, (err) => {
+  document.getElementById("statusLine").textContent = "Couldn't load products. Check your connection.";
+  console.error(err);
+});
+
+function renderCategories() {
+  const cats = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+  const chipsEl = document.getElementById("chips");
+  chipsEl.innerHTML = `<div class="chip ${activeCategory==='all'?'active':''}" data-cat="all">All</div>` +
+    cats.map(c => `<div class="chip ${activeCategory===c?'active':''}" data-cat="${c}">${c}</div>`).join("");
+  chipsEl.querySelectorAll(".chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      activeCategory = chip.dataset.cat;
+      renderCategories();
+      renderGrid();
+    });
+  });
+}
+
+function money(n) {
+  return "UGX " + Number(n || 0).toLocaleString();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const list = activeCategory === "all" ? products : products.filter(p => p.category === activeCategory);
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">No products here yet — check back soon.</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => {
+    const inCart = cart.find(c => c.id === p.id);
+    const qty = inCart ? inCart.qty : 0;
+    const outOfStock = p.inStock === false;
+    return `
+    <div class="card">
+      <div class="card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="12" rx="2" stroke="#12335C" stroke-width="2"/><path d="M8 20h8M12 16v4" stroke="#12335C" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
-      <a class="btn" href="https://wa.me/256753401795" target="_blank" rel="noopener">
-        <span class="pulse-dot"></span> Message us on WhatsApp
-      </a>
-    </div>
-  </div>
-</section>
+      <div class="cat">${p.category || "General"}</div>
+      <h3>${p.name || "Unnamed product"}</h3>
+      <div class="desc">${p.description || ""}</div>
+      <div class="price">${money(p.price)}</div>
+      ${outOfStock ? `<div class="stock-out">Out of stock</div>` : `
+        ${qty === 0
+          ? `<button class="add-btn" data-add="${p.id}">Add to list</button>`
+          : `<div class="qty-row">
+               <div class="stepper">
+                 <button data-dec="${p.id}">−</button>
+                 <span>${qty}</span>
+                 <button data-inc="${p.id}">+</button>
+               </div>
+             </div>`
+        }
+      `}
+    </div>`;
+  }).join("");
 
-<footer>
-  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-    <div class="foot-brand">
-      <svg width="20" height="20" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/>
-        <path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/>
-      </svg>
-      BAAKA Electronics
-    </div>
-    <span>&copy; 2026 BAAKA Electronics &middot; Mbarara, Uganda</span>
-  </div>
-</footer>
+  grid.querySelectorAll("[data-add]").forEach(b => b.addEventListener("click", () => addToCart(b.dataset.add)));
+  grid.querySelectorAll("[data-inc]").forEach(b => b.addEventListener("click", () => addToCart(b.dataset.inc)));
+  grid.querySelectorAll("[data-dec]").forEach(b => b.addEventListener("click", () => decFromCart(b.dataset.dec)));
+}
 
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const existing = cart.find(c => c.id === id);
+  if (existing) existing.qty += 1;
+  else cart.push({ id, name: p.name, price: p.price, qty: 1 });
+  saveCart();
+  renderGrid();
+}
+function decFromCart(id) {
+  const existing = cart.find(c => c.id === id);
+  if (!existing) return;
+  existing.qty -= 1;
+  if (existing.qty <= 0) cart = cart.filter(c => c.id !== id);
+  saveCart();
+  renderGrid();
+}
+function saveCart() {
+  localStorage.setItem("baaka_cart", JSON.stringify(cart));
+  renderCartUI();
+}
+
+function renderCartUI() {
+  const count = cart.reduce((s, c) => s + c.qty, 0);
+  const total = cart.reduce((s, c) => s + c.qty * (c.price || 0), 0);
+
+  document.getElementById("cartBadge").style.display = count ? "flex" : "none";
+  document.getElementById("cartBadge").textContent = count;
+  document.getElementById("cartBar").classList.toggle("show", count > 0);
+  document.getElementById("cartCountLabel").textContent = `${count} item${count===1?"":"s"}`;
+  document.getElementById("cartTotalLabel").textContent = money(total);
+  document.getElementById("drawerTotal").textContent = money(total);
+  document.getElementById("shopBtn").disabled = count === 0;
+
+  const itemsEl = document.getElementById("cartItems");
+  if (!cart.length) {
+    itemsEl.innerHTML = `<div class="empty-state">Your list is empty.<br>Add products to get started.</div>`;
+  } else {
+    itemsEl.innerHTML = cart.map(c => `
+      <div class="list-item">
+        <div class="info">
+          <h4>${c.name}</h4>
+          <div class="p">${c.qty} &times; ${money(c.price)}</div>
+        </div>
+        <button class="remove" data-remove="${c.id}">Remove</button>
+      </div>
+    `).join("");
+    itemsEl.querySelectorAll("[data-remove]").forEach(b => b.addEventListener("click", () => {
+      cart = cart.filter(c => c.id !== b.dataset.remove);
+      saveCart();
+      renderGrid();
+    }));
+  }
+}
+
+document.getElementById("shopBtn").addEventListener("click", () => {
+  if (!cart.length) return;
+  let msg = "Hi BAAKA Electronics, I'd like to order:\n\n";
+  cart.forEach(c => { msg += `• ${c.name} x${c.qty} — ${money(c.price * c.qty)}\n`; });
+  const total = cart.reduce((s, c) => s + c.qty * (c.price || 0), 0);
+  msg += `\nTotal: ${money(total)}`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+});
+
+// ---------- Drawers ----------
+function openDrawer(drawerId, overlayId) {
+  document.getElementById(drawerId).classList.add("show");
+  document.getElementById(overlayId).classList.add("show");
+}
+function closeDrawer(drawerId, overlayId) {
+  document.getElementById(drawerId).classList.remove("show");
+  document.getElementById(overlayId).classList.remove("show");
+}
+document.getElementById("cartBtn").addEventListener("click", () => openDrawer("cartDrawer","cartOverlay"));
+document.getElementById("openCartBtn").addEventListener("click", () => openDrawer("cartDrawer","cartOverlay"));
+document.getElementById("closeCart").addEventListener("click", () => closeDrawer("cartDrawer","cartOverlay"));
+document.getElementById("cartOverlay").addEventListener("click", () => closeDrawer("cartDrawer","cartOverlay"));
+
+document.getElementById("accountBtn").addEventListener("click", () => { renderAccount(); openDrawer("accountDrawer","accountOverlay"); });
+document.getElementById("closeAccount").addEventListener("click", () => closeDrawer("accountDrawer","accountOverlay"));
+document.getElementById("accountOverlay").addEventListener("click", () => closeDrawer("accountDrawer","accountOverlay"));
+
+// ---------- Phone auth ----------
+let confirmationResult = null;
+
+function renderAccount() {
+  const body = document.getElementById("accountBody");
+  if (currentUser) {
+    body.innerHTML = `
+      <div class="account-signed-in">
+        <span class="dot"></span>
+        <div>
+          <div style="font-weight:700;">Signed in</div>
+          <div class="muted">${currentUser.phoneNumber}</div>
+        </div>
+      </div>
+      <button class="primary-btn" id="signOutBtn" style="margin-top:16px; background:#C24B3F;">Sign out</button>
+    `;
+    document.getElementById("signOutBtn").addEventListener("click", () => auth.signOut());
+    return;
+  }
+  body.innerHTML = `
+    <p class="muted" style="margin-bottom:16px;">Sign in with your phone number to keep your shopping list and get order updates.</p>
+    <div id="stepPhone">
+      <div class="field">
+        <label>Phone number</label>
+        <input type="tel" id="phoneInput" placeholder="+2567XXXXXXXX">
+      </div>
+      <button class="primary-btn" id="sendCodeBtn">Send code</button>
+    </div>
+    <div id="stepCode" style="display:none; margin-top:16px;">
+      <div class="field">
+        <label>Enter the code we sent</label>
+        <input type="text" id="codeInput" inputmode="numeric" placeholder="123456">
+      </div>
+      <button class="primary-btn" id="verifyCodeBtn">Verify &amp; sign in</button>
+    </div>
+    <p class="muted" id="authError" style="color:#C24B3F; margin-top:12px;"></p>
+  `;
+
+  document.getElementById("sendCodeBtn").addEventListener("click", async () => {
+    const phone = document.getElementById("phoneInput").value.trim();
+    const errEl = document.getElementById("authError");
+    errEl.textContent = "";
+    if (!phone.startsWith("+")) {
+      errEl.textContent = "Include your country code, e.g. +2567XXXXXXXX";
+      return;
+    }
+    try {
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" }, auth);
+      }
+      confirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
+      document.getElementById("stepPhone").style.display = "none";
+      document.getElementById("stepCode").style.display = "block";
+    } catch (e) {
+      errEl.textContent = "Couldn't send code. Check the number and try again.";
+      console.error(e);
+    }
+  });
+
+  document.getElementById("verifyCodeBtn").addEventListener("click", async () => {
+    const code = document.getElementById("codeInput").value.trim();
+    const errEl = document.getElementById("authError");
+    try {
+      const result = await confirmationResult.confirm(code);
+      await db.collection("customers").doc(result.user.uid).set({
+        phoneNumber: result.user.phoneNumber,
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+    } catch (e) {
+      errEl.textContent = "That code didn't match. Try again.";
+      console.error(e);
+    }
+  });
+}
+
+auth.onAuthStateChanged((user) => {
+  currentUser = user;
+  if (document.getElementById("accountDrawer").classList.contains("show")) renderAccount();
+});
+
+// ---------- PWA install prompt ----------
+let deferredPrompt;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!localStorage.getItem("baaka_install_dismissed")) {
+    document.getElementById("installBanner").classList.add("show");
+  }
+});
+document.getElementById("installBtn").addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById("installBanner").classList.remove("show");
+});
+document.getElementById("dismissInstall").addEventListener("click", () => {
+  document.getElementById("installBanner").classList.remove("show");
+  localStorage.setItem("baaka_install_dismissed", "1");
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(console.error));
+}
+
+renderCartUI();
+</script>
 </body>
 </html>

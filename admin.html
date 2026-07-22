@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BAAKA Electronics — Admin</title>
+<meta name="theme-color" content="#12335C">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+  :root {
+    --ink: #0B1F1A;
+    --circuit-blue: #12335C;
+    --live-green: #2F9E5B;
+    --live-green-bright: #3FC172;
+    --paper: #F3F6F4;
+    --line: rgba(11,31,26,0.12);
+    --danger: #C24B3F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: 'Helvetica Neue', Arial, sans-serif; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 24px 18px 60px; }
+  header { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; margin-bottom: 24px; }
+  h1 { font-size: 1.3rem; margin-bottom: 6px; }
+  .muted { color: rgba(11,31,26,0.55); font-size: 0.88rem; }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 18px; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); font-size: 0.95rem; font-family: inherit;
+  }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .primary-btn {
+    padding: 12px 18px; border-radius: 10px; border: none;
+    background: var(--circuit-blue); color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  }
+  .ghost-btn {
+    padding: 12px 18px; border-radius: 10px; border: 1px solid var(--line);
+    background: #fff; color: var(--ink); font-weight: 700; font-size: 0.9rem; cursor: pointer;
+  }
+  .danger-btn {
+    padding: 8px 12px; border-radius: 8px; border: none;
+    background: var(--danger); color: #fff; font-weight: 700; font-size: 0.78rem; cursor: pointer;
+  }
+  .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 6px; border-bottom: 1px solid var(--line); font-size: 0.85rem; }
+  th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(11,31,26,0.5); }
+  .out-tag { color: var(--danger); font-weight: 700; font-size: 0.75rem; }
+  .row-actions { display: flex; gap: 6px; }
+  .edit-link { background:none; border:none; color: var(--circuit-blue); font-weight:700; font-size:0.78rem; cursor:pointer; }
+
+  /* Gate */
+  #gate { max-width: 380px; margin: 80px auto; }
+  #recaptcha-container { margin: 10px 0; }
+  .error-text { color: var(--danger); font-size: 0.85rem; margin-top: 8px; }
+  #adminApp { display: none; }
+</style>
+</head>
+<body>
+
+<div class="wrap" id="gate">
+  <header>
+    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/></svg>
+    BAAKA Admin
+  </header>
+  <div class="card">
+    <h1>Sign in</h1>
+    <p class="muted" style="margin-bottom:16px;">Only registered admin phone numbers can manage products.</p>
+    <div id="stepPhone">
+      <div class="field">
+        <label>Phone number</label>
+        <input type="tel" id="phoneInput" placeholder="+2567XXXXXXXX">
+      </div>
+      <button class="primary-btn" id="sendCodeBtn">Send code</button>
+    </div>
+    <div id="stepCode" style="display:none; margin-top:14px;">
+      <div class="field">
+        <label>Enter the code</label>
+        <input type="text" id="codeInput" inputmode="numeric" placeholder="123456">
+      </div>
+      <button class="primary-btn" id="verifyCodeBtn">Verify &amp; sign in</button>
+    </div>
+    <p class="error-text" id="authError"></p>
+  </div>
+  <div id="recaptcha-container"></div>
+</div>
+
+<div class="wrap" id="adminApp">
+  <header>
+    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/></svg>
+    BAAKA Admin
+    <span class="muted" id="adminPhone" style="margin-left:auto; font-weight:400;"></span>
+  </header>
+
+  <div class="card">
+    <h1 id="formTitle">Add a product</h1>
+    <p class="muted" style="margin-bottom:16px;">This shows up in the shop instantly once saved.</p>
+    <form id="productForm">
+      <div class="field">
+        <label>Product name</label>
+        <input type="text" id="pName" required placeholder="e.g. 12V Solar Panel 50W">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Category</label>
+          <input type="text" id="pCategory" required placeholder="e.g. Solar Kits">
+        </div>
+        <div class="field">
+          <label>Price (UGX)</label>
+          <input type="number" id="pPrice" required min="0" placeholder="e.g. 85000">
+        </div>
+      </div>
+      <div class="field">
+        <label>Short description (optional)</label>
+        <textarea id="pDesc" rows="2" placeholder="A line or two customers will see"></textarea>
+      </div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="pInStock" checked>
+        <label for="pInStock">In stock</label>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="primary-btn" id="saveBtn">Save product</button>
+        <button type="button" class="ghost-btn" id="cancelEditBtn" style="display:none;">Cancel edit</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h1>Your products</h1>
+    <p class="muted" id="productCount" style="margin-bottom:14px;"></p>
+    <table>
+      <thead><tr><th>Name</th><th>Category</th><th>Price</th><th></th></tr></thead>
+      <tbody id="productTableBody"></tbody>
+    </table>
+  </div>
+
+  <button class="ghost-btn" id="signOutBtn">Sign out</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+let confirmationResult = null;
+let editingId = null;
+
+document.getElementById("sendCodeBtn").addEventListener("click", async () => {
+  const phone = document.getElementById("phoneInput").value.trim();
+  const errEl = document.getElementById("authError");
+  errEl.textContent = "";
+  if (!phone.startsWith("+")) {
+    errEl.textContent = "Include your country code, e.g. +2567XXXXXXXX";
+    return;
+  }
+  try {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" }, auth);
+    }
+    confirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
+    document.getElementById("stepPhone").style.display = "none";
+    document.getElementById("stepCode").style.display = "block";
+  } catch (e) {
+    errEl.textContent = "Couldn't send code. Check the number and try again.";
+    console.error(e);
+  }
+});
+
+document.getElementById("verifyCodeBtn").addEventListener("click", async () => {
+  const code = document.getElementById("codeInput").value.trim();
+  const errEl = document.getElementById("authError");
+  try {
+    await confirmationResult.confirm(code);
+    // onAuthStateChanged below handles the admin check + view switch
+  } catch (e) {
+    errEl.textContent = "That code didn't match. Try again.";
+    console.error(e);
+  }
+});
+
+document.getElementById("signOutBtn").addEventListener("click", () => auth.signOut());
+
+auth.onAuthStateChanged(async (user) => {
+  const errEl = document.getElementById("authError");
+  if (!user) {
+    document.getElementById("gate").style.display = "block";
+    document.getElementById("adminApp").style.display = "none";
+    return;
+  }
+  // Check this phone number is in the "admins" collection
+  const adminDoc = await db.collection("admins").doc(user.phoneNumber).get();
+  if (!adminDoc.exists) {
+    errEl.textContent = `${user.phoneNumber} isn't set up as an admin yet.`;
+    await auth.signOut();
+    return;
+  }
+  document.getElementById("gate").style.display = "none";
+  document.getElementById("adminApp").style.display = "block";
+  document.getElementById("adminPhone").textContent = user.phoneNumber;
+  loadProducts();
+});
+
+function loadProducts() {
+  db.collection("products").orderBy("category").onSnapshot((snap) => {
+    const rows = [];
+    snap.forEach((doc) => rows.push({ id: doc.id, ...doc.data() }));
+    document.getElementById("productCount").textContent = `${rows.length} product${rows.length===1?"":"s"} listed`;
+    const tbody = document.getElementById("productTableBody");
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="muted">No products yet — add your first one above.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(p => `
+      <tr>
+        <td>${p.name || ""}${p.inStock === false ? '<div class="out-tag">Out of stock</div>' : ""}</td>
+        <td>${p.category || ""}</td>
+        <td>UGX ${Number(p.price||0).toLocaleString()}</td>
+        <td class="row-actions">
+          <button class="edit-link" data-edit="${p.id}">Edit</button>
+          <button class="danger-btn" data-del="${p.id}">Delete</button>
+        </td>
+      </tr>
+    `).join("");
+
+    tbody.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => {
+      const p = rows.find(r => r.id === b.dataset.edit);
+      startEdit(p);
+    }));
+    tbody.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", async () => {
+      if (confirm("Delete this product?")) await db.collection("products").doc(b.dataset.del).delete();
+    }));
+  });
+}
+
+function startEdit(p) {
+  editingId = p.id;
+  document.getElementById("formTitle").textContent = "Edit product";
+  document.getElementById("pName").value = p.name || "";
+  document.getElementById("pCategory").value = p.category || "";
+  document.getElementById("pPrice").value = p.price || "";
+  document.getElementById("pDesc").value = p.description || "";
+  document.getElementById("pInStock").checked = p.inStock !== false;
+  document.getElementById("saveBtn").textContent = "Save changes";
+  document.getElementById("cancelEditBtn").style.display = "inline-block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+
+function resetForm() {
+  editingId = null;
+  document.getElementById("productForm").reset();
+  document.getElementById("pInStock").checked = true;
+  document.getElementById("formTitle").textContent = "Add a product";
+  document.getElementById("saveBtn").textContent = "Save product";
+  document.getElementById("cancelEditBtn").style.display = "none";
+}
+
+document.getElementById("productForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const data = {
+    name: document.getElementById("pName").value.trim(),
+    category: document.getElementById("pCategory").value.trim(),
+    price: Number(document.getElementById("pPrice").value),
+    description: document.getElementById("pDesc").value.trim(),
+    inStock: document.getElementById("pInStock").checked,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+  if (editingId) {
+    await db.collection("products").doc(editingId).update(data);
+  } else {
+    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    await db.collection("products").add(data);
+  }
+  resetForm();
+});
+</script>
+</body>
+</html>

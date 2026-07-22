@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Anyone can browse products (needed for the shop to work without login)
+    // Only signed-in admins can add, edit, or delete products
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.phone_number));
+    }
+
+    // A customer can only read/write their own account document
+    match /customers/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Admin list: only readable/writable by admins already listed
+    // (In practice you'll add the first admin manually from the Firebase console)
+    match /admins/{phone} {
+      allow read: if request.auth != null;
+      allow write: if false; // manage this list from the Firebase console, not the app
+    }
+  }
+}
