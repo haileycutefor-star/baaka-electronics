@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BAAKA Electronics — Admin</title>
-<meta name="theme-color" content="#12335C">
+<meta name="theme-color" content="#175E3C">
 <link rel="icon" href="icons/icon-192.png">
 <style>
   :root {
     --ink: #0B1F1A;
-    --circuit-blue: #12335C;
-    --live-green: #2F9E5B;
-    --live-green-bright: #3FC172;
+    --brand-green: #175E3C;
+    --accent-orange: #E8790E;
+    --accent-orange-bright: #FB923C;
     --paper: #F3F6F4;
     --line: rgba(11,31,26,0.12);
     --danger: #C24B3F;
@@ -32,7 +32,7 @@
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .primary-btn {
     padding: 12px 18px; border-radius: 10px; border: none;
-    background: var(--circuit-blue); color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    background: var(--brand-green); color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer;
   }
   .ghost-btn {
     padding: 12px 18px; border-radius: 10px; border: 1px solid var(--line);
@@ -49,7 +49,7 @@
   th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgba(11,31,26,0.5); }
   .out-tag { color: var(--danger); font-weight: 700; font-size: 0.75rem; }
   .row-actions { display: flex; gap: 6px; }
-  .edit-link { background:none; border:none; color: var(--circuit-blue); font-weight:700; font-size:0.78rem; cursor:pointer; }
+  .edit-link { background:none; border:none; color: var(--brand-green); font-weight:700; font-size:0.78rem; cursor:pointer; }
 
   /* Gate */
   #gate { max-width: 380px; margin: 80px auto; }
@@ -62,7 +62,7 @@
 
 <div class="wrap" id="gate">
   <header>
-    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/></svg>
+    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#175E3C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#FB923C"/></svg>
     BAAKA Admin
   </header>
   <div class="card">
@@ -83,7 +83,7 @@
 
 <div class="wrap" id="adminApp">
   <header>
-    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#12335C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#3FC172"/></svg>
+    <svg width="24" height="24" viewBox="0 0 30 30" fill="none"><rect x="2" y="2" width="26" height="26" rx="7" fill="#175E3C"/><path d="M9 21L15 8L15 15L21 15L14 24V17H9V21Z" fill="#FB923C"/></svg>
     BAAKA Admin
     <span class="muted" id="adminPhone" style="margin-left:auto; font-weight:400;"></span>
   </header>
@@ -109,6 +109,11 @@
       <div class="field">
         <label>Short description (optional)</label>
         <textarea id="pDesc" rows="2" placeholder="A line or two customers will see"></textarea>
+      </div>
+      <div class="field">
+        <label>Photo URL (optional)</label>
+        <input type="url" id="pImage" placeholder="https://...">
+        <p class="muted" style="margin-top:6px;">Upload a photo to a free host like imgur.com, then paste the direct image link here.</p>
       </div>
       <div class="checkbox-row">
         <input type="checkbox" id="pInStock" checked>
@@ -215,6 +220,7 @@ function startEdit(p) {
   document.getElementById("pCategory").value = p.category || "";
   document.getElementById("pPrice").value = p.price || "";
   document.getElementById("pDesc").value = p.description || "";
+  document.getElementById("pImage").value = p.imageUrl || "";
   document.getElementById("pInStock").checked = p.inStock !== false;
   document.getElementById("saveBtn").textContent = "Save changes";
   document.getElementById("cancelEditBtn").style.display = "inline-block";
@@ -239,6 +245,7 @@ document.getElementById("productForm").addEventListener("submit", async (e) => {
     category: document.getElementById("pCategory").value.trim(),
     price: Number(document.getElementById("pPrice").value),
     description: document.getElementById("pDesc").value.trim(),
+    imageUrl: document.getElementById("pImage").value.trim(),
     inStock: document.getElementById("pInStock").checked,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
