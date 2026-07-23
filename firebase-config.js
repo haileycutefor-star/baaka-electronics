@@ -4,7 +4,7 @@
 // in this project for the rules you need to set in the Firebase console.
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDG8fvmkKQjIdbLTNipEbSbpcEYZ2JUuEU",
+  apiKey: "AIzaSyCIriUbUbw0ndIQdujXhGI95BC_U10Lpc0",
   authDomain: "baakaelectronics-72e5b.firebaseapp.com",
   projectId: "baakaelectronics-72e5b",
   storageBucket: "baakaelectronics-72e5b.firebasestorage.app",
