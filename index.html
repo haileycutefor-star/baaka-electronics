@@ -454,9 +454,7 @@ document.getElementById("accountBtn").addEventListener("click", () => { renderAc
 document.getElementById("closeAccount").addEventListener("click", () => closeDrawer("accountDrawer","accountOverlay"));
 document.getElementById("accountOverlay").addEventListener("click", () => closeDrawer("accountDrawer","accountOverlay"));
 
-// ---------- Phone auth ----------
-let confirmationResult = null;
-
+// ---------- Email auth ----------
 function renderAccount() {
   const body = document.getElementById("accountBody");
   if (currentUser) {
@@ -465,7 +463,7 @@ function renderAccount() {
         <span class="dot"></span>
         <div>
           <div style="font-weight:700;">Signed in</div>
-          <div class="muted">${currentUser.phoneNumber}</div>
+          <div class="muted">${currentUser.email}</div>
         </div>
       </div>
       <button class="primary-btn" id="signOutBtn" style="margin-top:16px; background:#C24B3F;">Sign out</button>
@@ -474,56 +472,50 @@ function renderAccount() {
     return;
   }
   body.innerHTML = `
-    <p class="muted" style="margin-bottom:16px;">Sign in with your phone number to keep your shopping list and get order updates.</p>
-    <div id="stepPhone">
-      <div class="field">
-        <label>Phone number</label>
-        <input type="tel" id="phoneInput" placeholder="+2567XXXXXXXX">
-      </div>
-      <button class="primary-btn" id="sendCodeBtn">Send code</button>
+    <p class="muted" style="margin-bottom:16px;">Sign in to keep your shopping list and get order updates.</p>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
     </div>
-    <div id="stepCode" style="display:none; margin-top:16px;">
-      <div class="field">
-        <label>Enter the code we sent</label>
-        <input type="text" id="codeInput" inputmode="numeric" placeholder="123456">
-      </div>
-      <button class="primary-btn" id="verifyCodeBtn">Verify &amp; sign in</button>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="At least 6 characters">
     </div>
+    <button class="primary-btn" id="signInBtn">Sign in</button>
+    <button class="primary-btn" id="signUpBtn" style="margin-top:8px; background:var(--live-green);">Create account</button>
     <p class="muted" id="authError" style="color:#C24B3F; margin-top:12px;"></p>
   `;
 
-  document.getElementById("sendCodeBtn").addEventListener("click", async () => {
-    const phone = document.getElementById("phoneInput").value.trim();
+  document.getElementById("signInBtn").addEventListener("click", async () => {
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
     const errEl = document.getElementById("authError");
     errEl.textContent = "";
-    if (!phone.startsWith("+")) {
-      errEl.textContent = "Include your country code, e.g. +2567XXXXXXXX";
-      return;
-    }
     try {
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" }, auth);
-      }
-      confirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
-      document.getElementById("stepPhone").style.display = "none";
-      document.getElementById("stepCode").style.display = "block";
+      await auth.signInWithEmailAndPassword(email, password);
     } catch (e) {
-      errEl.textContent = "Couldn't send code. Check the number and try again.";
+      errEl.textContent = "Couldn't sign in. Check your email and password.";
       console.error(e);
     }
   });
 
-  document.getElementById("verifyCodeBtn").addEventListener("click", async () => {
-    const code = document.getElementById("codeInput").value.trim();
+  document.getElementById("signUpBtn").addEventListener("click", async () => {
+    const email = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
     const errEl = document.getElementById("authError");
+    errEl.textContent = "";
+    if (password.length < 6) {
+      errEl.textContent = "Password needs to be at least 6 characters.";
+      return;
+    }
     try {
-      const result = await confirmationResult.confirm(code);
+      const result = await auth.createUserWithEmailAndPassword(email, password);
       await db.collection("customers").doc(result.user.uid).set({
-        phoneNumber: result.user.phoneNumber,
+        email: result.user.email,
         lastSeen: firebase.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
     } catch (e) {
-      errEl.textContent = "That code didn't match. Try again.";
+      errEl.textContent = "Couldn't create account. That email might already be in use.";
       console.error(e);
     }
   });
