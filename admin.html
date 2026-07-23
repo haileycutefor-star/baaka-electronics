@@ -67,24 +67,18 @@
   </header>
   <div class="card">
     <h1>Sign in</h1>
-    <p class="muted" style="margin-bottom:16px;">Only registered admin phone numbers can manage products.</p>
-    <div id="stepPhone">
-      <div class="field">
-        <label>Phone number</label>
-        <input type="tel" id="phoneInput" placeholder="+2567XXXXXXXX">
-      </div>
-      <button class="primary-btn" id="sendCodeBtn">Send code</button>
+    <p class="muted" style="margin-bottom:16px;">Only registered admin emails can manage products.</p>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
     </div>
-    <div id="stepCode" style="display:none; margin-top:14px;">
-      <div class="field">
-        <label>Enter the code</label>
-        <input type="text" id="codeInput" inputmode="numeric" placeholder="123456">
-      </div>
-      <button class="primary-btn" id="verifyCodeBtn">Verify &amp; sign in</button>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="passwordInput" placeholder="Your password">
     </div>
+    <button class="primary-btn" id="signInBtn">Sign in</button>
     <p class="error-text" id="authError"></p>
   </div>
-  <div id="recaptcha-container"></div>
 </div>
 
 <div class="wrap" id="adminApp">
@@ -144,38 +138,18 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script>
-let confirmationResult = null;
 let editingId = null;
 
-document.getElementById("sendCodeBtn").addEventListener("click", async () => {
-  const phone = document.getElementById("phoneInput").value.trim();
+document.getElementById("signInBtn").addEventListener("click", async () => {
+  const email = document.getElementById("emailInput").value.trim();
+  const password = document.getElementById("passwordInput").value;
   const errEl = document.getElementById("authError");
   errEl.textContent = "";
-  if (!phone.startsWith("+")) {
-    errEl.textContent = "Include your country code, e.g. +2567XXXXXXXX";
-    return;
-  }
   try {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", { size: "invisible" }, auth);
-    }
-    confirmationResult = await auth.signInWithPhoneNumber(phone, window.recaptchaVerifier);
-    document.getElementById("stepPhone").style.display = "none";
-    document.getElementById("stepCode").style.display = "block";
-  } catch (e) {
-    errEl.textContent = "Couldn't send code. Check the number and try again.";
-    console.error(e);
-  }
-});
-
-document.getElementById("verifyCodeBtn").addEventListener("click", async () => {
-  const code = document.getElementById("codeInput").value.trim();
-  const errEl = document.getElementById("authError");
-  try {
-    await confirmationResult.confirm(code);
+    await auth.signInWithEmailAndPassword(email, password);
     // onAuthStateChanged below handles the admin check + view switch
   } catch (e) {
-    errEl.textContent = "That code didn't match. Try again.";
+    errEl.textContent = "Couldn't sign in. Check your email and password.";
     console.error(e);
   }
 });
@@ -189,16 +163,16 @@ auth.onAuthStateChanged(async (user) => {
     document.getElementById("adminApp").style.display = "none";
     return;
   }
-  // Check this phone number is in the "admins" collection
-  const adminDoc = await db.collection("admins").doc(user.phoneNumber).get();
+  // Check this email is in the "admins" collection
+  const adminDoc = await db.collection("admins").doc(user.email).get();
   if (!adminDoc.exists) {
-    errEl.textContent = `${user.phoneNumber} isn't set up as an admin yet.`;
+    errEl.textContent = `${user.email} isn't set up as an admin yet.`;
     await auth.signOut();
     return;
   }
   document.getElementById("gate").style.display = "none";
   document.getElementById("adminApp").style.display = "block";
-  document.getElementById("adminPhone").textContent = user.phoneNumber;
+  document.getElementById("adminPhone").textContent = user.email;
   loadProducts();
 });
 
